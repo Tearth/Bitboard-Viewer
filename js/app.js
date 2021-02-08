@@ -1,10 +1,10 @@
 $(document).ready(function() {
-    generateBitboard('#bitboard1');
-    generateBitboard('#bitboard2');
-    generateBitboard('#bitboard3');
+    generateBitboard('#bitboard1', false);
+    generateBitboard('#bitboard2', false);
+    generateBitboard('#bitboard3', true);
 });
 
-function generateBitboard(areaId) {
+function generateBitboard(areaId, readOnly) {
     var area = $(areaId);
     for (var y = 0; y < 8; y++) {
         var row = $(document.createElement('div')).prop({
@@ -16,15 +16,26 @@ function generateBitboard(areaId) {
                 type: 'checkbox',
                 value: x + y * 8,
             });
+            
+            if (readOnly) {
+                checkbox.prop('disabled', true);
+            }
+            
             row.append(checkbox);
         }
         
         area.append(row);
     }
     
-    area.append(generateTextbox('Decimal'));
-    area.append(generateTextbox('Hexadecimal'));
-    area.append(generateGroupOfButtons());
+    
+    if (readOnly) {
+        area.append(generateGroupOfButtons(true));
+    } else {
+        area.append(generateGroupOfButtons(false));
+        area.append(generateTextbox('Decimal'));
+        area.append(generateTextbox('Hexadecimal'));
+        area.append(generateTextbox('Binary'));
+    }
 }
 
 function generateTextbox(label) {
@@ -42,15 +53,23 @@ function generateTextbox(label) {
     return div;
 }
 
-function generateGroupOfButtons() {
+function generateGroupOfButtons(readOnly) {
     var group = $(document.createElement('div')).prop({
         class: 'btn-group buttons-row'
     });
     
-    group.append(generateButton('Fill'));
-    group.append(generateButton('Clear'));
-    group.append(generateButton('Shift left'));
-    group.append(generateButton('Shift right'));
+    if (readOnly) {
+        group.append(generateButton('AND'));
+        group.append(generateButton('OR'));
+        group.append(generateButton('XOR'));
+        group.append(generateButton('NOT'));
+    } else {
+        group.append(generateButton('Fill'));
+        group.append(generateButton('Clear'));
+        group.append(generateButton('Shift left'));
+        group.append(generateButton('Shift right'));
+    }
+    
     return group;
 }
 
