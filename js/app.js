@@ -1,7 +1,7 @@
 $(document).ready(function() {
-    generateBitboard("#bitboard1");
-    generateBitboard("#bitboard2");
-    generateBitboard("#bitboard3");
+    generateBitboard('#bitboard1');
+    generateBitboard('#bitboard2');
+    generateBitboard('#bitboard3');
 });
 
 function generateBitboard(areaId) {
@@ -21,4 +21,43 @@ function generateBitboard(areaId) {
         
         area.append(row);
     }
+    
+    area.append(generateTextbox('Decimal'));
+    area.append(generateTextbox('Hexadecimal'));
+    area.append(generateGroupOfButtons());
+}
+
+function generateTextbox(label) {
+    var div = $(document.createElement('div')).prop({
+        class: 'input-row'
+    });
+    
+    var textbox = $(document.createElement('input')).prop({
+        type: 'textbox',
+        class: 'form-control',
+        placeholder: label
+    });
+    
+    div.append(textbox);
+    return div;
+}
+
+function generateGroupOfButtons() {
+    var group = $(document.createElement('div')).prop({
+        class: 'btn-group buttons-row'
+    });
+    
+    group.append(generateButton('Fill'));
+    group.append(generateButton('Clear'));
+    group.append(generateButton('Shift left'));
+    group.append(generateButton('Shift right'));
+    return group;
+}
+
+function generateButton(value) {
+    return $(document.createElement('input')).prop({
+        type: 'button',
+        class: 'btn btn-info',
+        value: value
+    });
 }

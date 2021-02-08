@@ -5,3 +5,15 @@
 .bitboard input[type='checkbox'] {
     margin: 5px;
 }
+
+.input-row {
+    
+}
+
+.input-row input[type='textbox'] {
+    margin-top: 5px;
+}
+
+.buttons-row {
+    margin: 5px;
+}
