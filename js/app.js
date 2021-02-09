@@ -11,26 +11,6 @@ $(document).ready(function() {
 
 function generateLayout(areaId, variant) {
     var area = $(areaId);
-    
-    var radioRow = $(document.createElement('div')).prop({
-        class: 'radio-row'
-    });
-    
-    var radio = $(document.createElement('input')).prop({
-        type: 'radio',
-        name: 'radioLayout',
-        class: 'form-check-input',
-        value: variant
-    });
-    
-    var radioLabel = $(document.createElement('label')).prop({
-        class: 'form-check-label'
-    }).html('test');
-    
-    radioRow.append(radio);
-    radioRow.append(radioLabel);
-    area.append(radioRow);
-    
     for (var y = 0; y < 8; y++) {
         var row = $(document.createElement('div')).prop({
             class: 'layout-row'
@@ -52,8 +32,8 @@ function generateLayout(areaId, variant) {
 
 function getLayoutVariant(variant, x, y) {
     switch (variant) {
-        case 0: return 63 - (x + y * 8);
-        case 1: return 63 - (7 - x + y * 8);
+        case 0: return 63 - (7 - x + y * 8);
+        case 1: return 63 - (x + y * 8);
         case 2: return x + y * 8;
         case 3: return 7 - x + y * 8;
     }

@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
     <head>
-        <title>The HTML5 Herald</title>
+        <title>Bitboard Viewer</title>
         <meta name="description" content="Bitboard viewer for chess developers">
-        <meta name="author" content="SitePoint">
+        <meta name="author" content="Teartg">
         <meta charset="utf-8">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <link rel="stylesheet" href="css/app.css">
@@ -18,64 +18,84 @@
             </nav>
         </div>
         <div class="container">
-            <div class="card-deck mb-3 text-center">
-                <div class="card mb-4 box-shadow">
-                    <div id="layout1" class="card-body layout">
+            <div class="card-columns mb-3 text-center no-bottom-margin custom-columns-1-2-4">
+                <div class="card mb-4 box-shadow small-bottom-margin">
+                    <div class="card-body small-padding">
+                        <div class="radio-row">
+                            <input type="radio" name="radioLayout" value="1">
+                            <label class="no-bottom-margin">Layout 1</label>
+                        </div>
+                        <div id="layout1" class="layout"></div>
                     </div>
                 </div>
-                <div class="card mb-4 box-shadow">
-                    <div id="layout2" class="card-body layout">
+                <div class="card mb-4 box-shadow small-bottom-margin">
+                    <div class="card-body small-padding">
+                        <div class="radio-row">
+                            <input type="radio" name="radioLayout" value="2">
+                            <label class="no-bottom-margin">Layout 2</label>
+                        </div>
+                        <div id="layout2" class="layout"></div>
                     </div>
                 </div>
-                <div class="card mb-4 box-shadow">
-                    <div id="layout3" class="card-body layout">
+                <div class="card mb-4 box-shadow small-bottom-margin">
+                    <div class="card-body small-padding">
+                        <div class="radio-row">
+                            <input type="radio" name="radioLayout" value="3">
+                            <label class="no-bottom-margin">Layout 3</label>
+                        </div>
+                        <div id="layout3" class="layout"></div>
                     </div>
                 </div>
-                <div class="card mb-4 box-shadow">
-                    <div id="layout4" class="card-body layout">
+                <div class="card mb-4 box-shadow small-bottom-margin">
+                    <div class="card-body small-padding">
+                        <div class="radio-row">
+                            <input type="radio" name="radioLayout" value="4">
+                            <label class="no-bottom-margin">Layout 4</label>
+                        </div>
+                        <div id="layout4" class="layout"></div>
                     </div>
                 </div>
             </div>
-            <div class="card-deck mb-3 text-center">
-                <div class="card mb-4 box-shadow">
-                    <div class="card-body">
+            <div class="card-columns mb-3 text-center no-bottom-margin custom-columns-1-3">
+                <div class="card mb-4 box-shadow small-bottom-margin">
+                    <div class="card-body small-padding">
                         <div id="bitboard1" class="bitboard"></div>
                         <div class="input-row"><input type="textbox" class="form-control" placeholder="Decimal"></div>
                         <div class="input-row"><input type="textbox" class="form-control" placeholder="Hexadecimal"></div>
                         <div class="input-row"><input type="textbox" class="form-control" placeholder="Binary"></div>
                         <div class="btn-group buttons-row">
-                            <input type="button" class="btn btn-info" value="Fill">
-                            <input type="button" class="btn btn-info" value="Clear">
-                            <input type="button" class="btn btn-info" value="Shift left">
-                            <input type="button" class="btn btn-info" value="Shift right">
+                            <input type="button" class="btn btn-primary" value="Fill">
+                            <input type="button" class="btn btn-primary" value="Clear">
+                            <input type="button" class="btn btn-primary" value="Shift left">
+                            <input type="button" class="btn btn-primary" value="Shift right">
                         </div>
                     </div>
                 </div>
-                <div class="card mb-4 box-shadow">
-                    <div class="card-body">
+                <div class="card mb-4 box-shadow small-bottom-margin">
+                    <div class="card-body small-padding">
                         <div id="bitboard2" class="bitboard"></div>
                         <div class="input-row"><input type="textbox" class="form-control" placeholder="Decimal"></div>
                         <div class="input-row"><input type="textbox" class="form-control" placeholder="Hexadecimal"></div>
                         <div class="input-row"><input type="textbox" class="form-control" placeholder="Binary"></div>
                         <div class="btn-group buttons-row">
-                            <input type="button" class="btn btn-info" value="Fill">
-                            <input type="button" class="btn btn-info" value="Clear">
-                            <input type="button" class="btn btn-info" value="Shift left">
-                            <input type="button" class="btn btn-info" value="Shift right">
+                            <input type="button" class="btn btn-primary" value="Fill">
+                            <input type="button" class="btn btn-primary" value="Clear">
+                            <input type="button" class="btn btn-primary" value="Shift left">
+                            <input type="button" class="btn btn-primary" value="Shift right">
                         </div>
                     </div>
                 </div>
-                <div class="card mb-4 box-shadow">
-                    <div class="card-body">
+                <div class="card mb-4 box-shadow small-bottom-margin">
+                    <div class="card-body small-padding">
                         <div id="bitboard3" class="bitboard"></div>
                         <div class="input-row"><input type="textbox" class="form-control" placeholder="Decimal" readonly></div>
                         <div class="input-row"><input type="textbox" class="form-control" placeholder="Hexadecimal" readonly></div>
                         <div class="input-row"><input type="textbox" class="form-control" placeholder="Binary" readonly></div>
                         <div class="btn-group buttons-row">
-                            <input type="button" class="btn btn-info" value="AND">
-                            <input type="button" class="btn btn-info" value="OR">
-                            <input type="button" class="btn btn-info" value="XOR">
-                            <input type="button" class="btn btn-info" value="NOT">
+                            <input type="button" class="btn btn-success" value="AND">
+                            <input type="button" class="btn btn-success" value="OR">
+                            <input type="button" class="btn btn-success" value="XOR">
+                            <input type="button" class="btn btn-success" value="NOT">
                         </div>
                     </div>
                 </div>
