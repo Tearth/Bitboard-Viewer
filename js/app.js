@@ -15,6 +15,10 @@ $(document).ready(function() {
     $('#decBitboard2').keyup(decBitboard2KeyUp);
     $('#hexBitboard2').keyup(hexBitboard2KeyUp);
     $('#binBitboard2').keyup(binBitboard2KeyUp);
+    
+    $('#andBitboard3').click(andBitboard3Click);
+    $('#orBitboard3').click(orBitboard3Click);
+    $('#xorBitboard3').click(xorBitboard3Click);
 });
 
 function generateLayout(areaId, variant) {
@@ -98,15 +102,27 @@ function binBitboard2KeyUp() {
 }
 
 function andBitboard3Click() {
+    var value1 = parseInt($('#decBitboard1').val(), 10);
+    var value2 = parseInt($('#decBitboard2').val(), 10);
+    var result = value1 & value2;
     
+    updateReadOnlyTextboxes(result);
 }
 
 function orBitboard3Click() {
+    var value1 = parseInt($('#decBitboard1').val(), 10);
+    var value2 = parseInt($('#decBitboard2').val(), 10);
+    var result = value1 | value2;
     
+    updateReadOnlyTextboxes(result);
 }
 
 function xorBitboard3Click() {
+    var value1 = parseInt($('#decBitboard1').val(), 10);
+    var value2 = parseInt($('#decBitboard2').val(), 10);
+    var result = value1 ^ value2;
     
+    updateReadOnlyTextboxes(result);
 }
 
 function decKeyUp(decTextbox, hexTextbox, binTextbox) {
@@ -125,4 +141,10 @@ function binKeyUp(decTextbox, hexTextbox, binTextbox) {
     var value = parseInt(binTextbox.val(), 2);
     decTextbox.val(value.toString(10));
     hexTextbox.val('0x' + value.toString(16));
+}
+
+function updateReadOnlyTextboxes(value) {
+    $('#decBitboard3').val(value.toString(10));
+    $('#hexBitboard3').val('0x' + value.toString(16));
+    $('#binBitboard3').val(value.toString(2));
 }
