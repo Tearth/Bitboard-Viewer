@@ -29,7 +29,7 @@ function generateLayout(areaId, variant) {
         });
         
         for (var x = 0; x < 8; x++) {
-            var value = getLayoutVariant(variant, x, y);
+            var value = getLayoutVariantByXY(variant, x, y);
             if (value < 10) {
                 value = '0' + value;
             }
@@ -42,7 +42,7 @@ function generateLayout(areaId, variant) {
     }
 }
 
-function getLayoutVariant(variant, x, y) {
+function getLayoutVariantByXY(variant, x, y) {
     switch (variant) {
         case 0: return 63 - (7 - x + y * 8);
         case 1: return 63 - (x + y * 8);
@@ -53,8 +53,12 @@ function getLayoutVariant(variant, x, y) {
     return 0;
 }
 
-function generateBitboard(areaId, readOnly) {
-    var area = $(areaId);
+function getLayoutVariantByIndex(variant, index) {
+    return getLayoutVariantByXY(variant, index % 8, Math.floor(index / 8));
+}
+
+function generateBitboard(bitboard, readOnly) {
+    var area = $(bitboard);
     for (var y = 0; y < 8; y++) {
         var row = $(document.createElement('div')).prop({
             class: 'bitboard-row'
@@ -67,7 +71,7 @@ function generateBitboard(areaId, readOnly) {
             });
             
             if (readOnly) {
-                checkbox.prop('disabled', true);
+                checkbox.prop('readonly', true);
             }
             
             row.append(checkbox);
@@ -78,73 +82,92 @@ function generateBitboard(areaId, readOnly) {
 }
 
 function decBitboard1KeyUp() {
-    decKeyUp($('#decBitboard1'), $('#hexBitboard1'), $('#binBitboard1'));
+    decKeyUp($('#bitboard1'), $('#decBitboard1'), $('#hexBitboard1'), $('#binBitboard1'));
 }
 
 function hexBitboard1KeyUp() {
-    hexKeyUp($('#decBitboard1'), $('#hexBitboard1'), $('#binBitboard1'));
+    hexKeyUp($('#bitboard1'), $('#decBitboard1'), $('#hexBitboard1'), $('#binBitboard1'));
 }
 
 function binBitboard1KeyUp() {
-    binKeyUp($('#decBitboard1'), $('#hexBitboard1'), $('#binBitboard1'));
+    binKeyUp($('#bitboard1'), $('#decBitboard1'), $('#hexBitboard1'), $('#binBitboard1'));
 }
 
 function decBitboard2KeyUp() {
-    decKeyUp($('#decBitboard2'), $('#hexBitboard2'), $('#binBitboard2'));
+    decKeyUp($('#bitboard2'), $('#decBitboard2'), $('#hexBitboard2'), $('#binBitboard2'));
 }
 
 function hexBitboard2KeyUp() {
-    hexKeyUp($('#decBitboard2'), $('#hexBitboard2'), $('#binBitboard2'));
+    hexKeyUp($('#bitboard2'), $('#decBitboard2'), $('#hexBitboard2'), $('#binBitboard2'));
 }
 
 function binBitboard2KeyUp() {
-    binKeyUp($('#decBitboard2'), $('#hexBitboard2'), $('#binBitboard2'));
+    binKeyUp($('#bitboard2'), $('#decBitboard2'), $('#hexBitboard2'), $('#binBitboard2'));
 }
 
 function andBitboard3Click() {
-    var value1 = parseInt($('#decBitboard1').val(), 10);
-    var value2 = parseInt($('#decBitboard2').val(), 10);
+    var value1 = BigInt($('#decBitboard1').val());
+    var value2 = BigInt($('#decBitboard2').val());
     var result = value1 & value2;
     
     updateReadOnlyTextboxes(result);
+    updateBitboard($('#bitboard3'), result);
 }
 
 function orBitboard3Click() {
-    var value1 = parseInt($('#decBitboard1').val(), 10);
-    var value2 = parseInt($('#decBitboard2').val(), 10);
+    var value1 = BigInt($('#decBitboard1').val());
+    var value2 = BigInt($('#decBitboard2').val());
     var result = value1 | value2;
     
     updateReadOnlyTextboxes(result);
+    updateBitboard($('#bitboard3'), result);
 }
 
 function xorBitboard3Click() {
-    var value1 = parseInt($('#decBitboard1').val(), 10);
-    var value2 = parseInt($('#decBitboard2').val(), 10);
+    var value1 = BigInt($('#decBitboard1').val());
+    var value2 = BigInt($('#decBitboard2').val());
     var result = value1 ^ value2;
     
     updateReadOnlyTextboxes(result);
+    updateBitboard($('#bitboard3'), result);
 }
 
-function decKeyUp(decTextbox, hexTextbox, binTextbox) {
-    var value = parseInt(decTextbox.val(), 10);
-    hexTextbox.val('0x' + value.toString(16));
-    binTextbox.val(value.toString(2));
+function decKeyUp(bitboard, decTextbox, hexTextbox, binTextbox) {
+    var bigIntValue = BigInt(decTextbox.val());
+    hexTextbox.val('0x' + bigIntValue.toString(16));
+    binTextbox.val('0b' + bigIntValue.toString(2));
+    
+    updateBitboard(bitboard, bigIntValue);
 }
 
-function hexKeyUp(decTextbox, hexTextbox, binTextbox) {
-    var value = parseInt(hexTextbox.val(), 16);
-    decTextbox.val(value.toString(10));
-    binTextbox.val(value.toString(2));
+function hexKeyUp(bitboard, decTextbox, hexTextbox, binTextbox) {
+    var bigIntValue = BigInt(hexTextbox.val());
+    decTextbox.val(bigIntValue.toString(10));
+    binTextbox.val('0b' + bigIntValue.toString(2));
+    
+    updateBitboard(bitboard, bigIntValue);
 }
 
-function binKeyUp(decTextbox, hexTextbox, binTextbox) {
-    var value = parseInt(binTextbox.val(), 2);
-    decTextbox.val(value.toString(10));
-    hexTextbox.val('0x' + value.toString(16));
+function binKeyUp(bitboard, decTextbox, hexTextbox, binTextbox) {
+    var bigIntValue = BigInt(binTextbox.val());
+    decTextbox.val(bigIntValue.toString(10));
+    hexTextbox.val('0x' + bigIntValue.toString(16));
+    
+    updateBitboard(bitboard, bigIntValue);
 }
 
 function updateReadOnlyTextboxes(value) {
     $('#decBitboard3').val(value.toString(10));
     $('#hexBitboard3').val('0x' + value.toString(16));
     $('#binBitboard3').val(value.toString(2));
+}
+
+function updateBitboard(bitboard, value) {
+    for (var index = 0; index < 64; index++) {
+        var bit = value & BigInt(1);
+        value = value >> BigInt(1);
+        
+        var bitboardIndex = getLayoutVariantByIndex(0, index);
+        bitboard.find('input[type=checkbox][value=' + bitboardIndex + ']').prop('checked', bit != 0);
+    }
 }
