@@ -1,3 +1,5 @@
+let layoutVariant = 0;
+
 $(document).ready(function() {
     generateLayout('#layout1', 0);
     generateLayout('#layout2', 1);
@@ -7,6 +9,11 @@ $(document).ready(function() {
     generateBitboard('#bitboard1', false);
     generateBitboard('#bitboard2', false);
     generateBitboard('#bitboard3', true);
+    
+    $('#layoutRadio1').click(layout1Click);
+    $('#layoutRadio2').click(layout2Click);
+    $('#layoutRadio3').click(layout3Click);
+    $('#layoutRadio4').click(layout4Click);
     
     $('#decBitboard1').keyup(decBitboard1KeyUp);
     $('#hexBitboard1').keyup(hexBitboard1KeyUp);
@@ -79,6 +86,32 @@ function generateBitboard(bitboard, readOnly) {
         
         area.append(row);
     }
+}
+
+function layout1Click() {
+    layoutVariant = 0;
+    refreshValuesAfterLayoutChange();
+}
+
+function layout2Click() {
+    layoutVariant = 1;
+    refreshValuesAfterLayoutChange();
+}
+
+function layout3Click() {
+    layoutVariant = 2;
+    refreshValuesAfterLayoutChange();
+}
+
+function layout4Click() {
+    layoutVariant = 3;
+    refreshValuesAfterLayoutChange();
+}
+
+function refreshValuesAfterLayoutChange() {
+    decKeyUp($('#bitboard1'), $('#decBitboard1'), $('#hexBitboard1'), $('#binBitboard1'));
+    decKeyUp($('#bitboard2'), $('#decBitboard2'), $('#hexBitboard2'), $('#binBitboard2'));
+    decKeyUp($('#bitboard3'), $('#decBitboard3'), $('#hexBitboard3'), $('#binBitboard3'));
 }
 
 function decBitboard1KeyUp() {
@@ -159,15 +192,15 @@ function binKeyUp(bitboard, decTextbox, hexTextbox, binTextbox) {
 function updateReadOnlyTextboxes(value) {
     $('#decBitboard3').val(value.toString(10));
     $('#hexBitboard3').val('0x' + value.toString(16));
-    $('#binBitboard3').val(value.toString(2));
+    $('#binBitboard3').val('0b' + value.toString(2));
 }
 
-function updateBitboard(bitboard, value) {
+function updateBitboard(bitboard, value, variant) {
     for (var index = 0; index < 64; index++) {
         var bit = value & BigInt(1);
         value = value >> BigInt(1);
         
-        var bitboardIndex = getLayoutVariantByIndex(0, index);
+        var bitboardIndex = getLayoutVariantByIndex(layoutVariant, index);
         bitboard.find('input[type=checkbox][value=' + bitboardIndex + ']').prop('checked', bit != 0);
     }
 }
