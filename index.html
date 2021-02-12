@@ -22,7 +22,7 @@
                 <div class="card mb-4 box-shadow small-bottom-margin">
                     <div class="card-body small-padding">
                         <div class="radio-row">
-                            <input type="radio" id="layoutRadio1" name="radioLayout" value="1">
+                            <input type="radio" id="layoutRadio1" name="radioLayout" value="1" checked>
                             <label class="no-bottom-margin">Layout 1</label>
                         </div>
                         <div id="layout1" class="layout"></div>
@@ -60,9 +60,9 @@
                 <div class="card mb-4 box-shadow small-bottom-margin">
                     <div class="card-body small-padding">
                         <div id="bitboard1" class="bitboard"></div>
-                        <div class="input-row"><input type="textbox" id="decBitboard1" class="form-control" placeholder="Decimal"></div>
-                        <div class="input-row"><input type="textbox" id="hexBitboard1" class="form-control" placeholder="Hexadecimal"></div>
-                        <div class="input-row"><input type="textbox" id="binBitboard1" class="form-control" placeholder="Binary"></div>
+                        <div class="input-row"><input type="textbox" id="decBitboard1" class="form-control" placeholder="Decimal" value="0"></div>
+                        <div class="input-row"><input type="textbox" id="hexBitboard1" class="form-control" placeholder="Hexadecimal" value="0x0"></div>
+                        <div class="input-row"><input type="textbox" id="binBitboard1" class="form-control" placeholder="Binary" value="0b0"></div>
                         <div class="btn-group buttons-row">
                             <input type="button" class="btn btn-primary" value="Fill">
                             <input type="button" class="btn btn-primary" value="Clear">
@@ -75,9 +75,9 @@
                 <div class="card mb-4 box-shadow small-bottom-margin">
                     <div class="card-body small-padding">
                         <div id="bitboard2" class="bitboard"></div>
-                        <div class="input-row"><input type="textbox" id="decBitboard2" class="form-control" placeholder="Decimal"></div>
-                        <div class="input-row"><input type="textbox" id="hexBitboard2" class="form-control" placeholder="Hexadecimal"></div>
-                        <div class="input-row"><input type="textbox" id="binBitboard2" class="form-control" placeholder="Binary"></div>
+                        <div class="input-row"><input type="textbox" id="decBitboard2" class="form-control" placeholder="Decimal" value="0"></div>
+                        <div class="input-row"><input type="textbox" id="hexBitboard2" class="form-control" placeholder="Hexadecimal" value="0x0"></div>
+                        <div class="input-row"><input type="textbox" id="binBitboard2" class="form-control" placeholder="Binary" value="0b0"></div>
                         <div class="btn-group buttons-row">
                             <input type="button" class="btn btn-primary" value="Fill">
                             <input type="button" class="btn btn-primary" value="Clear">
@@ -90,9 +90,9 @@
                 <div class="card mb-4 box-shadow small-bottom-margin">
                     <div class="card-body small-padding">
                         <div id="bitboard3" class="bitboard"></div>
-                        <div class="input-row"><input type="textbox" id="decBitboard3" class="form-control" placeholder="Decimal" readonly></div>
-                        <div class="input-row"><input type="textbox" id="hexBitboard3" class="form-control" placeholder="Hexadecimal" readonly></div>
-                        <div class="input-row"><input type="textbox" id="binBitboard3" class="form-control" placeholder="Binary" readonly></div>
+                        <div class="input-row"><input type="textbox" id="decBitboard3" class="form-control" placeholder="Decimal" value="0" readonly></div>
+                        <div class="input-row"><input type="textbox" id="hexBitboard3" class="form-control" placeholder="Hexadecimal" value="0x0" readonly></div>
+                        <div class="input-row"><input type="textbox" id="binBitboard3" class="form-control" placeholder="Binary" value="0b0" readonly></div>
                         <div class="btn-group buttons-row">
                             <input type="button" id="andBitboard3" class="btn btn-success" value="AND">
                             <input type="button" id="orBitboard3" class="btn btn-success" value="OR">
