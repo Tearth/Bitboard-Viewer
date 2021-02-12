@@ -10,22 +10,22 @@ $(document).ready(function() {
     generateBitboard('#bitboard2', false);
     generateBitboard('#bitboard3', true);
     
-    $('#layoutRadio1').click(layout1Click);
-    $('#layoutRadio2').click(layout2Click);
-    $('#layoutRadio3').click(layout3Click);
-    $('#layoutRadio4').click(layout4Click);
+    $('#layoutRadio1').click(() => changeLayout(0));
+    $('#layoutRadio2').click(() => changeLayout(1));
+    $('#layoutRadio3').click(() => changeLayout(2));
+    $('#layoutRadio4').click(() => changeLayout(3));
     
-    $('#decBitboard1').keyup(decBitboard1KeyUp);
-    $('#hexBitboard1').keyup(hexBitboard1KeyUp);
-    $('#binBitboard1').keyup(binBitboard1KeyUp);
+    $('#decBitboard1').keyup(() => decKeyUp($('#bitboard1'), $('#decBitboard1'), $('#hexBitboard1'), $('#binBitboard1')));
+    $('#hexBitboard1').keyup(() => hexKeyUp($('#bitboard1'), $('#decBitboard1'), $('#hexBitboard1'), $('#binBitboard1')));
+    $('#binBitboard1').keyup(() => binKeyUp($('#bitboard1'), $('#decBitboard1'), $('#hexBitboard1'), $('#binBitboard1')));
     
-    $('#decBitboard2').keyup(decBitboard2KeyUp);
-    $('#hexBitboard2').keyup(hexBitboard2KeyUp);
-    $('#binBitboard2').keyup(binBitboard2KeyUp);
+    $('#decBitboard2').keyup(() => decKeyUp($('#bitboard2'), $('#decBitboard2'), $('#hexBitboard2'), $('#binBitboard2')));
+    $('#hexBitboard2').keyup(() => hexKeyUp($('#bitboard2'), $('#decBitboard2'), $('#hexBitboard2'), $('#binBitboard2')));
+    $('#binBitboard2').keyup(() => binKeyUp($('#bitboard2'), $('#decBitboard2'), $('#hexBitboard2'), $('#binBitboard2')));
     
-    $('#andBitboard3').click(andBitboard3Click);
-    $('#orBitboard3').click(orBitboard3Click);
-    $('#xorBitboard3').click(xorBitboard3Click);
+    $('#andBitboard3').click(() => doOperation((x, y) => x & y));
+    $('#orBitboard3').click(() => doOperation((x, y) => x | y));
+    $('#xorBitboard3').click(() => doOperation((x, y) => x ^ y));
 });
 
 function generateLayout(areaId, variant) {
@@ -88,23 +88,8 @@ function generateBitboard(bitboard, readOnly) {
     }
 }
 
-function layout1Click() {
-    layoutVariant = 0;
-    refreshValuesAfterLayoutChange();
-}
-
-function layout2Click() {
-    layoutVariant = 1;
-    refreshValuesAfterLayoutChange();
-}
-
-function layout3Click() {
-    layoutVariant = 2;
-    refreshValuesAfterLayoutChange();
-}
-
-function layout4Click() {
-    layoutVariant = 3;
+function changeLayout(variant) {
+    layoutVariant = variant;
     refreshValuesAfterLayoutChange();
 }
 
@@ -114,52 +99,10 @@ function refreshValuesAfterLayoutChange() {
     decKeyUp($('#bitboard3'), $('#decBitboard3'), $('#hexBitboard3'), $('#binBitboard3'));
 }
 
-function decBitboard1KeyUp() {
-    decKeyUp($('#bitboard1'), $('#decBitboard1'), $('#hexBitboard1'), $('#binBitboard1'));
-}
-
-function hexBitboard1KeyUp() {
-    hexKeyUp($('#bitboard1'), $('#decBitboard1'), $('#hexBitboard1'), $('#binBitboard1'));
-}
-
-function binBitboard1KeyUp() {
-    binKeyUp($('#bitboard1'), $('#decBitboard1'), $('#hexBitboard1'), $('#binBitboard1'));
-}
-
-function decBitboard2KeyUp() {
-    decKeyUp($('#bitboard2'), $('#decBitboard2'), $('#hexBitboard2'), $('#binBitboard2'));
-}
-
-function hexBitboard2KeyUp() {
-    hexKeyUp($('#bitboard2'), $('#decBitboard2'), $('#hexBitboard2'), $('#binBitboard2'));
-}
-
-function binBitboard2KeyUp() {
-    binKeyUp($('#bitboard2'), $('#decBitboard2'), $('#hexBitboard2'), $('#binBitboard2'));
-}
-
-function andBitboard3Click() {
+function doOperation(operation) {
     var value1 = BigInt($('#decBitboard1').val());
     var value2 = BigInt($('#decBitboard2').val());
-    var result = value1 & value2;
-    
-    updateReadOnlyTextboxes(result);
-    updateBitboard($('#bitboard3'), result);
-}
-
-function orBitboard3Click() {
-    var value1 = BigInt($('#decBitboard1').val());
-    var value2 = BigInt($('#decBitboard2').val());
-    var result = value1 | value2;
-    
-    updateReadOnlyTextboxes(result);
-    updateBitboard($('#bitboard3'), result);
-}
-
-function xorBitboard3Click() {
-    var value1 = BigInt($('#decBitboard1').val());
-    var value2 = BigInt($('#decBitboard2').val());
-    var result = value1 ^ value2;
+    var result = operation(value1, value2);
     
     updateReadOnlyTextboxes(result);
     updateBitboard($('#bitboard3'), result);
