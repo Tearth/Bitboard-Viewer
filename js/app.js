@@ -1,14 +1,14 @@
 let layoutVariant = 0;
 
 $(document).ready(function() {
-    generateLayout('#layout1', 0);
-    generateLayout('#layout2', 1);
-    generateLayout('#layout3', 2);
-    generateLayout('#layout4', 3);
+    generateLayout($('#layout1'), 0);
+    generateLayout($('#layout2'), 1);
+    generateLayout($('#layout3'), 2);
+    generateLayout($('#layout4'), 3);
     
-    generateBitboard('#bitboard1', false);
-    generateBitboard('#bitboard2', false);
-    generateBitboard('#bitboard3', true);
+    generateBitboard($('#bitboard1'), $('#decBitboard1'), false);
+    generateBitboard($('#bitboard2'), $('#decBitboard2'), false);
+    generateBitboard($('#bitboard3'), $('#decBitboard3'), true);
     
     $('#layoutRadio1').click(() => changeLayout(0));
     $('#layoutRadio2').click(() => changeLayout(1));
@@ -28,8 +28,7 @@ $(document).ready(function() {
     $('#xorBitboard3').click(() => doOperation((x, y) => x ^ y));
 });
 
-function generateLayout(areaId, variant) {
-    var area = $(areaId);
+function generateLayout(layout, variant) {
     for (var y = 0; y < 8; y++) {
         var row = $(document.createElement('div')).prop({
             class: 'layout-row'
@@ -45,46 +44,32 @@ function generateLayout(areaId, variant) {
             row.append(span);
         }
         
-        area.append(row);
+        layout.append(row);
     }
 }
 
-function getLayoutVariantByXY(variant, x, y) {
-    switch (variant) {
-        case 0: return 63 - (7 - x + y * 8);
-        case 1: return 63 - (x + y * 8);
-        case 2: return x + y * 8;
-        case 3: return 7 - x + y * 8;
-    }
-    
-    return 0;
-}
-
-function getLayoutVariantByIndex(variant, index) {
-    return getLayoutVariantByXY(variant, index % 8, Math.floor(index / 8));
-}
-
-function generateBitboard(bitboard, readOnly) {
-    var area = $(bitboard);
+function generateBitboard(bitboard, decTextbox, readOnly) {
     for (var y = 0; y < 8; y++) {
         var row = $(document.createElement('div')).prop({
             class: 'bitboard-row'
         });
         
         for (var x = 0; x < 8; x++) {
+            var value = x + y * 8;
             var checkbox = $(document.createElement('input')).prop({
                 type: 'checkbox',
-                value: x + y * 8,
+                value: value,
             });
             
             if (readOnly) {
                 checkbox.prop('readonly', true);
             }
             
+            checkbox.click(((v) => () => bitboardCheckboxClick(bitboard, decTextbox, v))(value));
             row.append(checkbox);
         }
         
-        area.append(row);
+        bitboard.append(row);
     }
 }
 
@@ -146,4 +131,31 @@ function updateBitboard(bitboard, value, variant) {
         var bitboardIndex = getLayoutVariantByIndex(layoutVariant, index);
         bitboard.find('input[type=checkbox][value=' + bitboardIndex + ']').prop('checked', bit != 0);
     }
+}
+
+function bitboardCheckboxClick(bitboard, decTextbox, index) {
+    var checkbox = bitboard.find('input[type=checkbox][value=' + index + ']');
+    var state = checkbox.prop('checked');
+    var variantIndex = BigInt(getLayoutVariantByIndex(layoutVariant, index));
+    
+    var value = BigInt(decTextbox.val());
+    value = (value & ~(BigInt(1) << variantIndex)) | (BigInt(state ? 1 : 0) << variantIndex);
+    
+    decTextbox.val(value);
+    refreshValuesAfterLayoutChange();
+}
+
+function getLayoutVariantByXY(variant, x, y) {
+    switch (variant) {
+        case 0: return 63 - (7 - x + y * 8);
+        case 1: return 63 - (x + y * 8);
+        case 2: return x + y * 8;
+        case 3: return 7 - x + y * 8;
+    }
+    
+    return 0;
+}
+
+function getLayoutVariantByIndex(variant, index) {
+    return getLayoutVariantByXY(variant, index % 8, Math.floor(index / 8));
 }
