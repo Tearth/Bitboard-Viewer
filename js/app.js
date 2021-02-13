@@ -138,10 +138,10 @@ function updateReadOnlyTextboxes(value) {
     $('#binBitboard3').val('0b' + value.toString(2));
 }
 
-function updateBitboard(bitboard, value, variant) {
+function updateBitboard(bitboard, value) {
     for (var index = 0; index < 64; index++) {
-        var bit = value & BigInt(1);
-        value = value >> BigInt(1);
+        var bit = value & 1n;
+        value = value >> 1n;
         
         var bitboardIndex = getLayoutVariantByIndex(layoutVariant, index);
         bitboard.find('input[type=checkbox][value=' + bitboardIndex + ']').prop('checked', bit != 0);
@@ -154,7 +154,7 @@ function bitboardCheckboxClick(bitboard, decTextbox, index) {
     var variantIndex = BigInt(getLayoutVariantByIndex(layoutVariant, index));
     
     var value = BigInt(decTextbox.val());
-    value = (value & ~(BigInt(1) << variantIndex)) | (BigInt(state ? 1 : 0) << variantIndex);
+    value = (value & ~(1n << variantIndex)) | (BigInt(state ? 1 : 0) << variantIndex);
     
     decTextbox.val(value);
     refreshValuesAfterLayoutChange();
@@ -172,7 +172,7 @@ function clearBitboard(decTextbox) {
 
 function shlBitboard(decTextbox) {
     var value = BigInt(decTextbox.val());
-    value = value << BigInt(1);
+    value = value << 1n;
     decTextbox.val(value);
     
     refreshValuesAfterLayoutChange();
@@ -180,7 +180,7 @@ function shlBitboard(decTextbox) {
 
 function shrBitboard(decTextbox) {
     var value = BigInt(decTextbox.val());
-    value = value >> BigInt(1) & ~(BigInt(1) << BigInt(63));
+    value = value >> 1n & ~(1n << 63n);
     decTextbox.val(value);
     
     refreshValuesAfterLayoutChange();
@@ -188,7 +188,7 @@ function shrBitboard(decTextbox) {
 
 function notBitboard(decTextbox) {
     var value = BigInt(decTextbox.val());
-    value = BigInt(18446744073709551615) - value - BigInt(1);
+    value = 18446744073709551615n - value - 1n;
     decTextbox.val(value);
     
     refreshValuesAfterLayoutChange();
