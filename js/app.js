@@ -10,15 +10,7 @@ $(document).ready(function() {
     generateBitboard($('#bitboard2'), $('#decBitboard2'), false);
     generateBitboard($('#bitboard3'), $('#decBitboard3'), true);
     
-    var selectedLayoutCookie = Cookies.get('selectedLayout');
-    if (selectedLayoutCookie != undefined) {
-        selectedLayout = parseInt(selectedLayoutCookie);
-        $('#layoutRadio' + selectedLayoutCookie).prop('checked', true);
-    }
-    else {
-        $('#layoutRadio1').prop('checked', true);
-    }
-    
+    loadCookies();   
     $('#container').show();
     
     $('#layoutRadio1').click(() => changeLayout(1));
@@ -96,6 +88,17 @@ function generateBitboard(bitboard, decTextbox, readOnly) {
         }
         
         bitboard.append(row);
+    }
+}
+
+function loadCookies() {
+    var selectedLayoutCookie = Cookies.get('selectedLayout');
+    if (selectedLayoutCookie != undefined) {
+        selectedLayout = parseInt(selectedLayoutCookie);
+        $('#layoutRadio' + selectedLayoutCookie).prop('checked', true);
+    }
+    else {
+        $('#layoutRadio1').prop('checked', true);
     }
 }
 
