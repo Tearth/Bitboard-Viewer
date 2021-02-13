@@ -1,4 +1,4 @@
-let layoutVariant = 0;
+let selectedLayout = 1;
 
 $(document).ready(function() {
     generateLayout($('#layout1'), 0);
@@ -12,15 +12,19 @@ $(document).ready(function() {
     
     var selectedLayoutCookie = Cookies.get('selectedLayout');
     if (selectedLayoutCookie != undefined) {
-        layoutVariant = parseInt(selectedLayoutCookie);
+        selectedLayout = parseInt(selectedLayoutCookie);
+        $('#layoutRadio' + selectedLayoutCookie).prop('checked', true);
+    }
+    else {
+        $('#layoutRadio1').prop('checked', true);
     }
     
     $('#container').show();
     
-    $('#layoutRadio1').click(() => changeLayout(0));
-    $('#layoutRadio2').click(() => changeLayout(1));
-    $('#layoutRadio3').click(() => changeLayout(2));
-    $('#layoutRadio4').click(() => changeLayout(3));
+    $('#layoutRadio1').click(() => changeLayout(1));
+    $('#layoutRadio2').click(() => changeLayout(2));
+    $('#layoutRadio3').click(() => changeLayout(3));
+    $('#layoutRadio4').click(() => changeLayout(4));
     
     $('#decBitboard1').keyup(() => decKeyUp($('#bitboard1'), $('#decBitboard1'), $('#hexBitboard1'), $('#binBitboard1')));
     $('#hexBitboard1').keyup(() => hexKeyUp($('#bitboard1'), $('#decBitboard1'), $('#hexBitboard1'), $('#binBitboard1')));
@@ -57,7 +61,7 @@ function generateLayout(layout, variant) {
         });
         
         for (var x = 0; x < 8; x++) {
-            var value = getLayoutVariantByXY(variant, x, y);
+            var value = getselectedLayoutByXY(variant, x, y);
             if (value < 10) {
                 value = '0' + value;
             }
@@ -96,7 +100,7 @@ function generateBitboard(bitboard, decTextbox, readOnly) {
 }
 
 function changeLayout(variant) {
-    layoutVariant = variant;
+    selectedLayout = variant;
     refreshValuesAfterLayoutChange();
     
     Cookies.set('selectedLayout', variant, { expires: 10 * 365 });
@@ -152,7 +156,7 @@ function updateBitboard(bitboard, value) {
         var bit = value & 1n;
         value = value >> 1n;
         
-        var bitboardIndex = getLayoutVariantByIndex(layoutVariant, index);
+        var bitboardIndex = getselectedLayoutByIndex(selectedLayout, index);
         bitboard.find('input[type=checkbox][value=' + bitboardIndex + ']').prop('checked', bit != 0);
     }
 }
@@ -160,7 +164,7 @@ function updateBitboard(bitboard, value) {
 function bitboardCheckboxClick(bitboard, decTextbox, index) {
     var checkbox = bitboard.find('input[type=checkbox][value=' + index + ']');
     var state = checkbox.prop('checked');
-    var variantIndex = BigInt(getLayoutVariantByIndex(layoutVariant, index));
+    var variantIndex = BigInt(getselectedLayoutByIndex(selectedLayout, index));
     
     var value = BigInt(decTextbox.val());
     value = (value & ~(1n << variantIndex)) | (BigInt(state ? 1 : 0) << variantIndex);
@@ -203,17 +207,17 @@ function notBitboard(decTextbox) {
     refreshValuesAfterLayoutChange();
 }
 
-function getLayoutVariantByXY(variant, x, y) {
+function getselectedLayoutByXY(variant, x, y) {
     switch (variant) {
-        case 0: return 63 - (7 - x + y * 8);
-        case 1: return 63 - (x + y * 8);
-        case 2: return x + y * 8;
-        case 3: return 7 - x + y * 8;
+        case 1: return 63 - (7 - x + y * 8);
+        case 2: return 63 - (x + y * 8);
+        case 3: return x + y * 8;
+        case 4: return 7 - x + y * 8;
     }
     
     return 0;
 }
 
-function getLayoutVariantByIndex(variant, index) {
-    return getLayoutVariantByXY(variant, index % 8, Math.floor(index / 8));
+function getselectedLayoutByIndex(variant, index) {
+    return getselectedLayoutByXY(variant, index % 8, Math.floor(index / 8));
 }
