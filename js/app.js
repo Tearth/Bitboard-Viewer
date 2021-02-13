@@ -10,6 +10,13 @@ $(document).ready(function() {
     generateBitboard($('#bitboard2'), $('#decBitboard2'), false);
     generateBitboard($('#bitboard3'), $('#decBitboard3'), true);
     
+    var selectedLayoutCookie = Cookies.get('selectedLayout');
+    if (selectedLayoutCookie != undefined) {
+        layoutVariant = parseInt(selectedLayoutCookie);
+    }
+    
+    $('#container').show();
+    
     $('#layoutRadio1').click(() => changeLayout(0));
     $('#layoutRadio2').click(() => changeLayout(1));
     $('#layoutRadio3').click(() => changeLayout(2));
@@ -91,6 +98,8 @@ function generateBitboard(bitboard, decTextbox, readOnly) {
 function changeLayout(variant) {
     layoutVariant = variant;
     refreshValuesAfterLayoutChange();
+    
+    Cookies.set('selectedLayout', variant, { expires: 10 * 365 });
 }
 
 function refreshValuesAfterLayoutChange() {
