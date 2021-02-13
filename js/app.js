@@ -23,6 +23,21 @@ $(document).ready(function() {
     $('#hexBitboard2').keyup(() => hexKeyUp($('#bitboard2'), $('#decBitboard2'), $('#hexBitboard2'), $('#binBitboard2')));
     $('#binBitboard2').keyup(() => binKeyUp($('#bitboard2'), $('#decBitboard2'), $('#hexBitboard2'), $('#binBitboard2')));
     
+    $('#fillBitboard1').click(() => fillBitboard($('#decBitboard1')));
+    $('#fillBitboard2').click(() => fillBitboard($('#decBitboard2')));
+    
+    $('#clearBitboard1').click(() => clearBitboard($('#decBitboard1')));
+    $('#clearBitboard2').click(() => clearBitboard($('#decBitboard2')));
+    
+    $('#shlBitboard1').click(() => shlBitboard($('#decBitboard1')));
+    $('#shlBitboard2').click(() => shlBitboard($('#decBitboard2')));
+    
+    $('#shrBitboard1').click(() => shrBitboard($('#decBitboard1')));
+    $('#shrBitboard2').click(() => shrBitboard($('#decBitboard2')));
+    
+    $('#notBitboard1').click(() => notBitboard($('#decBitboard1')));
+    $('#notBitboard2').click(() => notBitboard($('#decBitboard2')));
+    
     $('#andBitboard3').click(() => doOperation((x, y) => x & y));
     $('#orBitboard3').click(() => doOperation((x, y) => x | y));
     $('#xorBitboard3').click(() => doOperation((x, y) => x ^ y));
@@ -142,6 +157,40 @@ function bitboardCheckboxClick(bitboard, decTextbox, index) {
     value = (value & ~(BigInt(1) << variantIndex)) | (BigInt(state ? 1 : 0) << variantIndex);
     
     decTextbox.val(value);
+    refreshValuesAfterLayoutChange();
+}
+
+function fillBitboard(decTextbox) {
+    decTextbox.val('18446744073709551615');
+    refreshValuesAfterLayoutChange();
+}
+
+function clearBitboard(decTextbox) {
+    decTextbox.val('0');
+    refreshValuesAfterLayoutChange();
+}
+
+function shlBitboard(decTextbox) {
+    var value = BigInt(decTextbox.val());
+    value = value << BigInt(1);
+    decTextbox.val(value);
+    
+    refreshValuesAfterLayoutChange();
+}
+
+function shrBitboard(decTextbox) {
+    var value = BigInt(decTextbox.val());
+    value = value >> BigInt(1) & ~(BigInt(1) << BigInt(63));
+    decTextbox.val(value);
+    
+    refreshValuesAfterLayoutChange();
+}
+
+function notBitboard(decTextbox) {
+    var value = BigInt(decTextbox.val());
+    value = BigInt(18446744073709551615) - value - BigInt(1);
+    decTextbox.val(value);
+    
     refreshValuesAfterLayoutChange();
 }
 
