@@ -1,10 +1,10 @@
 let selectedLayout = 1;
 
 $(document).ready(function() {
-    generateLayout($('#layout1'), 0);
-    generateLayout($('#layout2'), 1);
-    generateLayout($('#layout3'), 2);
-    generateLayout($('#layout4'), 3);
+    generateLayout($('#layout1'), 1);
+    generateLayout($('#layout2'), 2);
+    generateLayout($('#layout3'), 3);
+    generateLayout($('#layout4'), 4);
     
     generateBitboard($('#bitboard1'), $('#decBitboard1'), false);
     generateBitboard($('#bitboard2'), $('#decBitboard2'), false);
