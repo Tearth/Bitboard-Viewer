@@ -71,7 +71,11 @@ function generateBitboard(bitboard, decTextbox, readOnly) {
         var row = $(document.createElement('div')).prop({
             class: 'bitboard-row'
         });
-        
+        var button = $(document.createElement('input')).prop({
+            type: 'rowbutton',
+            value: y,
+            id: y,
+            });
         for (var x = 0; x < 8; x++) {
             var value = x + y * 8;
             var checkbox = $(document.createElement('input')).prop({
@@ -84,9 +88,9 @@ function generateBitboard(bitboard, decTextbox, readOnly) {
             }
             
             checkbox.click(((v) => () => bitboardCheckboxClick(bitboard, decTextbox, v))(value));
+            row.prepend(button)
             row.append(checkbox);
         }
-        
         bitboard.append(row);
     }
 }
