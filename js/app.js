@@ -67,31 +67,50 @@ function generateLayout(layout, variant) {
 }
 
 function generateBitboard(bitboard, decTextbox, readOnly) {
-    for (var y = 0; y < 8; y++) {
-        var row = $(document.createElement('div')).prop({
+        // Add bottom row for column buttons
+        var bottomrow = $(document.createElement('div')).prop({
             class: 'bitboard-row'
         });
-        var button = $(document.createElement('input')).prop({
+
+    for (var y = 0; y < 8; y++) {
+        var row = $(document.createElement('div')).prop({
+            class: 'bitboard-row',
+        });
+        // Add buttons to fill a row
+        var rowbutton = $(document.createElement('button')).prop({
             type: 'rowbutton',
             value: y,
             id: y,
+            class: "btn btn-primary",
             });
+        // Buttons to fill columns
+        var colbutton = $(document.createElement('button')).prop({
+            type: 'colbutton',
+            value: y,
+            id: y,
+            class: "bitboard-row btn btn-primary",
+            });
+        // Checkboxes
         for (var x = 0; x < 8; x++) {
             var value = x + y * 8;
             var checkbox = $(document.createElement('input')).prop({
                 type: 'checkbox',
                 value: value,
             });
-            
+
             if (readOnly) {
                 checkbox.prop('readonly', true);
             }
-            
+
             checkbox.click(((v) => () => bitboardCheckboxClick(bitboard, decTextbox, v))(value));
-            row.prepend(button)
+            // prepend each rowbutton
+            row.prepend(rowbutton);
+            // append each colbutton
+            bottomrow.append(colbutton);
             row.append(checkbox);
         }
         bitboard.append(row);
+        bitboard.append(bottomrow)
     }
 }
 
