@@ -68,49 +68,63 @@ function generateLayout(layout, variant) {
 
 function generateBitboard(bitboard, decTextbox, readOnly) {
         // Add bottom row for column buttons
-        var bottomrow = $(document.createElement('div')).prop({
-            class: 'bitboard-row'
-        });
-
-    for (var y = 0; y < 8; y++) {
-        var row = $(document.createElement('div')).prop({
-            class: 'bitboard-row',
-        });
-        // Add buttons to fill a row
-        var rowbutton = $(document.createElement('button')).prop({
-            type: 'rowbutton',
-            value: y,
-            id: y,
-            class: "btn btn-primary",
+        if (!readOnly) {
+            var bottomrow = $(document.createElement('div')).prop({
+                class: 'bitboard-row'
             });
-        // Buttons to fill columns
-        var colbutton = $(document.createElement('button')).prop({
-            type: 'colbutton',
-            value: y,
-            id: y,
-            class: "bitboard-row btn btn-primary",
-            });
-        // Checkboxes
-        for (var x = 0; x < 8; x++) {
-            var value = x + y * 8;
-            var checkbox = $(document.createElement('input')).prop({
-                type: 'checkbox',
-                value: value,
-            });
-
-            if (readOnly) {
-                checkbox.prop('readonly', true);
-            }
-
-            checkbox.click(((v) => () => bitboardCheckboxClick(bitboard, decTextbox, v))(value));
-            // prepend each rowbutton
-            row.prepend(rowbutton);
-            // append each colbutton
-            bottomrow.append(colbutton);
-            row.append(checkbox);
         }
-        bitboard.append(row);
-        bitboard.append(bottomrow)
+        for (var y = 0; y < 8; y++) {
+            var row = $(document.createElement('div')).prop({
+                class: 'bitboard-row',
+            });
+            // Add buttons to fill a row
+            if (!readOnly){
+                var rowbutton = $(document.createElement('button')).prop({
+                    type: 'rowbutton',
+                    value: y,
+                    id: y,
+                    class: "btn btn-primary",
+                });
+                rowbutton.click(((v) => () => rowClick(bitboard, decTextbox, v))(y))
+            }
+            // Buttons to fill columns
+            const files =  ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+            if (!readOnly) {
+                var colbutton = $(document.createElement('button')).prop({
+                    type: 'colbutton',
+                    value: files[y],
+                    id: y,
+                    class: "btn btn-primary",
+                    });
+                colbutton.click(((v) => () => colClick(bitboard, decTextbox, v))(files[y]))
+            }
+            // Checkboxes
+            for (var x = 0; x < 8; x++) {
+                var value = x + y * 8;
+                var checkbox = $(document.createElement('input')).prop({
+                    type: 'checkbox',
+                    value: value,
+                });
+                if (readOnly) {
+                    checkbox.prop('readonly', true);
+                }
+    
+                checkbox.click(((v) => () => bitboardCheckboxClick(bitboard, decTextbox, v))(value));
+                // prepend each rowbutton
+                if (!readOnly) {row.prepend(rowbutton);}
+                // append each colbutton
+                if (!readOnly) {bottomrow.append(colbutton);}
+                row.append(checkbox);
+            }
+            bitboard.append(row);
+            if (!readOnly) {bitboard.append(bottomrow)};
+
+            }
+                    if (readOnly){
+                var colspacer = $(document.createElement('div')).prop({
+                class: 'colspacer'
+            });
+                bitboard.append(colspacer)
     }
 }
 
@@ -199,6 +213,32 @@ function bitboardCheckboxClick(bitboard, decTextbox, index) {
     refreshValuesAfterLayoutChange();
 }
 
+function rowClick(bitboard, decTextbox, yval){
+    // Magic number is a fully filled 8th rank
+    var toprow = BigInt(18374686479671623680);
+    // Inverse the shiftvalue for different layouts
+    var shiftval = BigInt(calcRowShiftValue(selectedLayout, yval));
+    var row = toprow >> (shiftval * 8n);
+    // OR the existing field and the newly filled row
+    var newvalue = BigInt(decTextbox.val()) | row;
+    // Rotate the bitboard int to the correct layout
+    decTextbox.val(newvalue);
+    refreshValuesAfterLayoutChange();
+}
+
+function colClick(bitboard, decTextbox, file){
+    const files =  ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+    file = BigInt(files.indexOf(file));
+    // Magic number is a fully filled H file
+    var rightcol = 9259542123273814144n;
+    var shiftval = calcColShiftValue(selectedLayout, 7n - file);
+    var col =  rightcol >> shiftval;
+    // OR the existing field and the newly filled col
+    var newvalue = BigInt(decTextbox.val()) | col;
+    decTextbox.val(newvalue);    
+    refreshValuesAfterLayoutChange();
+}
+
 function fillBitboard(decTextbox) {
     decTextbox.val('18446744073709551615');
     refreshValuesAfterLayoutChange();
@@ -246,4 +286,22 @@ function getselectedLayoutByXY(variant, x, y) {
 
 function getselectedLayoutByIndex(variant, index) {
     return getselectedLayoutByXY(variant, index % 8, Math.floor(index / 8));
+}
+
+function calcRowShiftValue(variant, value) {
+    switch (variant) {
+        case 1: return value;
+        case 2: return value;
+        case 3: return 7 - value;
+        case 4: return 7 - value;
+    }
+}
+
+function calcColShiftValue(variant, value) {
+    switch (variant) {
+        case 1: return value;
+        case 2: return 7n - value;
+        case 3: return value;
+        case 4: return 7n - value;
+    }
 }
