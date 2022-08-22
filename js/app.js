@@ -67,7 +67,7 @@ function generateLayout(layout, variant) {
 }
 
 function generateBitboard(bitboard, decTextbox, readOnly) {
-        // Add bottom row for column buttons
+        // Add bottom div for column buttons
         if (!readOnly) {
             var bottomrow = $(document.createElement('div')).prop({
                 class: 'bitboard-row'
@@ -110,9 +110,7 @@ function generateBitboard(bitboard, decTextbox, readOnly) {
                 }
     
                 checkbox.click(((v) => () => bitboardCheckboxClick(bitboard, decTextbox, v))(value));
-                // prepend each rowbutton
                 if (!readOnly) {row.prepend(rowbutton);}
-                // append each colbutton
                 if (!readOnly) {bottomrow.append(colbutton);}
                 row.append(checkbox);
             }
@@ -205,24 +203,23 @@ function bitboardCheckboxClick(bitboard, decTextbox, index) {
     var checkbox = bitboard.find('input[type=checkbox][value=' + index + ']');
     var state = checkbox.prop('checked');
     var variantIndex = BigInt(getselectedLayoutByIndex(selectedLayout, index));
-    
     var value = BigInt(decTextbox.val());
     value = (value & ~(1n << variantIndex)) | (BigInt(state ? 1 : 0) << variantIndex);
-    
     decTextbox.val(value);
+    
     refreshValuesAfterLayoutChange();
 }
 
-function rowClick(bitboard, decTextbox, yval){
+function rowClick(bitboard, decTextbox, rank){
     // Magic number is a fully filled 8th rank
-    var toprow = BigInt(18374686479671623680);
+    var toprow = 18374686479671623680n;
     // Inverse the shiftvalue for different layouts
-    var shiftval = BigInt(calcRowShiftValue(selectedLayout, yval));
+    var shiftval = BigInt(calcRowShiftValue(selectedLayout, rank));
     var row = toprow >> (shiftval * 8n);
     // OR the existing field and the newly filled row
     var newvalue = BigInt(decTextbox.val()) | row;
-    // Rotate the bitboard int to the correct layout
     decTextbox.val(newvalue);
+    
     refreshValuesAfterLayoutChange();
 }
 
@@ -231,11 +228,13 @@ function colClick(bitboard, decTextbox, file){
     file = BigInt(files.indexOf(file));
     // Magic number is a fully filled H file
     var rightcol = 9259542123273814144n;
+    // Inverse the shiftvalue for different layouts
     var shiftval = calcColShiftValue(selectedLayout, 7n - file);
     var col =  rightcol >> shiftval;
     // OR the existing field and the newly filled col
     var newvalue = BigInt(decTextbox.val()) | col;
-    decTextbox.val(newvalue);    
+    decTextbox.val(newvalue);
+
     refreshValuesAfterLayoutChange();
 }
 
