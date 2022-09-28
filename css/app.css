@@ -31,14 +31,15 @@
 }
 
 .bitboard button[type='colbutton'] {
-    margin-left: 0.78rem;
+    margin-left: 0.69rem;
     padding: 5px;
     margin-bottom: 0.8rem;
 }
 
 .bitboard button[type='rowbutton'] {
-    margin: 5px;
-    margin-bottom: 6px;
+    margin-left: 5px;
+    margin-right: 3px;
+    margin-top: -5px;
 }
 
 .input-row {
