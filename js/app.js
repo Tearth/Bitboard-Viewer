@@ -44,6 +44,10 @@ $(document).ready(function() {
     $('#andBitboard3').click(() => doOperation((x, y) => x & y));
     $('#orBitboard3').click(() => doOperation((x, y) => x | y));
     $('#xorBitboard3').click(() => doOperation((x, y) => x ^ y));
+
+    updateBitboard($('#bitboard1'),BigInt($('#decBitboard1').val()));
+    updateBitboard($('#bitboard2'),BigInt($('#decBitboard2').val()));
+    updateBitboard($('#bitboard3'),BigInt($('#decBitboard3').val()));
 });
 
 function generateLayout(layout, variant) {
