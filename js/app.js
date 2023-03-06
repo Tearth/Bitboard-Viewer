@@ -238,6 +238,12 @@ function rowClick(bitboard, decTextbox, rank){
     var row = toprow >> (shiftval * 8n);
     // OR the existing field and the newly filled row
     var newvalue = BigInt(decTextbox.val()) | row;
+
+    // If the row is filled, clear it
+    if(newvalue === BigInt(decTextbox.val())){
+        newvalue = newvalue & ~(row);
+    }
+
     decTextbox.val(newvalue);
     
     refreshValuesAfterLayoutChange();
@@ -253,8 +259,14 @@ function colClick(bitboard, decTextbox, file){
     var col =  rightcol >> shiftval;
     // OR the existing field and the newly filled col
     var newvalue = BigInt(decTextbox.val()) | col;
-    decTextbox.val(newvalue);
+    
+    // If the row is filled, clear it
+    if(newvalue === BigInt(decTextbox.val())){
+        newvalue = newvalue & ~(col);
+    }
 
+    decTextbox.val(newvalue);
+    
     refreshValuesAfterLayoutChange();
 }
 
