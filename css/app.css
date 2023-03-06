@@ -25,6 +25,7 @@
 .bitboard {
     
 }
+
 .bitboard input[type='checkbox'] {
     margin: 5px;
 }
@@ -43,7 +44,7 @@
 
 .input-row {
     align-content: flex-end;
-    }
+}
 
 .buttons-row {
     margin: 5px;

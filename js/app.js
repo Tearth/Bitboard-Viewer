@@ -80,7 +80,7 @@ function generateBitboard(bitboard, decTextbox, readOnly) {
 	
 	for (var y = 0; y < 8; y++) {
 		var row = $(document.createElement('div')).prop({
-			class: 'bitboard-row',
+			class: 'bitboard-row'
 		});
 		
 		// Add buttons to fill a row
@@ -286,6 +286,11 @@ function clearBitboard(decTextbox) {
 
 function shlBitboard(decTextbox) {
     var value = BigInt(decTextbox.val());
+    var lastBitValue = value & (1n << 63n);
+    if(lastBitValue != 0n) {
+        value = value & ~lastBitValue; 
+    }
+
     value = value << 1n;
     decTextbox.val(value);
     
