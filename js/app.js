@@ -44,6 +44,10 @@ $(document).ready(function() {
     $('#andBitboard3').click(() => doOperation((x, y) => x & y));
     $('#orBitboard3').click(() => doOperation((x, y) => x | y));
     $('#xorBitboard3').click(() => doOperation((x, y) => x ^ y));
+
+    updateBitboard($('#bitboard1'),BigInt($('#decBitboard1').val()));
+    updateBitboard($('#bitboard2'),BigInt($('#decBitboard2').val()));
+    updateBitboard($('#bitboard3'),BigInt($('#decBitboard3').val()));
 });
 
 function generateLayout(layout, variant) {
@@ -76,7 +80,7 @@ function generateBitboard(bitboard, decTextbox, readOnly) {
 	
 	for (var y = 0; y < 8; y++) {
 		var row = $(document.createElement('div')).prop({
-			class: 'bitboard-row',
+			class: 'bitboard-row'
 		});
 		
 		// Add buttons to fill a row
@@ -238,6 +242,12 @@ function rowClick(bitboard, decTextbox, rank){
     var row = toprow >> (shiftval * 8n);
     // OR the existing field and the newly filled row
     var newvalue = BigInt(decTextbox.val()) | row;
+
+    // If the row is filled, clear it
+    if(newvalue === BigInt(decTextbox.val())){
+        newvalue = newvalue & ~(row);
+    }
+
     decTextbox.val(newvalue);
     
     refreshValuesAfterLayoutChange();
@@ -253,8 +263,14 @@ function colClick(bitboard, decTextbox, file){
     var col =  rightcol >> shiftval;
     // OR the existing field and the newly filled col
     var newvalue = BigInt(decTextbox.val()) | col;
-    decTextbox.val(newvalue);
+    
+    // If the row is filled, clear it
+    if(newvalue === BigInt(decTextbox.val())){
+        newvalue = newvalue & ~(col);
+    }
 
+    decTextbox.val(newvalue);
+    
     refreshValuesAfterLayoutChange();
 }
 
@@ -270,6 +286,11 @@ function clearBitboard(decTextbox) {
 
 function shlBitboard(decTextbox) {
     var value = BigInt(decTextbox.val());
+    var lastBitValue = value & (1n << 63n);
+    if(lastBitValue != 0n) {
+        value = value & ~lastBitValue; 
+    }
+
     value = value << 1n;
     decTextbox.val(value);
     
